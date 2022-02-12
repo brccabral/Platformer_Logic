@@ -42,10 +42,21 @@ class Player(pygame.sprite.Sprite):
                 if self.direction.x > 0:
                     self.rect.right = sprite.rect.left
 
+    def vertical_collisions(self):
+        for sprite in self.collisions_sprites.sprites():
+            if sprite.rect.colliderect(self.rect):
+                if self.direction.y > 0:
+                    self.rect.bottom = sprite.rect.top
+                    self.direction.y = 0
+                if self.direction.y < 0:
+                    self.rect.top = sprite.rect.bottom
+                    self.direction.y = 0
+
     def update(self):
         self.input()
         self.horizontal_collisions()
         self.apply_gravity()
+        self.vertical_collisions()
 
 if __name__ == '__main__':
     from main import main
