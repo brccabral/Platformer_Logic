@@ -3,7 +3,7 @@ import pygame
 from settings import *
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos: Tuple, groups: List[pygame.sprite.Group]):
+    def __init__(self, pos: Tuple, groups: List[pygame.sprite.Group], collisions_sprites: pygame.sprite.Group):
         super().__init__(groups)
         self.image = pygame.Surface((TILE_SIZE//2, TILE_SIZE))
         self.image.fill(PLAYER_COLOR)
@@ -14,6 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.speed = 8
         self.gravity = 0.8
         self.jump_speed = 16
+        self.collisions_sprites = collisions_sprites
     
     def input(self):
         keys = pygame.key.get_pressed()
@@ -32,9 +33,18 @@ class Player(pygame.sprite.Sprite):
         self.direction.y += self.gravity
         self.rect.y += self.direction.y
     
+    def horizontal_collisions(self):
+        self.rect.x += self.direction.x * self.speed
+        for sprite in self.collisions_sprites.sprites():
+            if sprite.rect.colliderect(self.rect):
+                if self.direction.x < 0:
+                    self.rect.left = sprite.rect.right
+                if self.direction.x > 0:
+                    self.rect.right = sprite.rect.left
+
     def update(self):
         self.input()
-        self.rect.x += self.direction.x * self.speed
+        self.horizontal_collisions()
         self.apply_gravity()
 
 if __name__ == '__main__':
