@@ -1,4 +1,5 @@
 from pydoc import describe
+from re import S
 from tkinter.tix import TixSubWidget
 import pygame
 from settings import *
@@ -45,11 +46,42 @@ class CameraGroup(pygame.sprite.Group):
 
         self.half_width = self.display_surface.get_size()[0] // 2
         self.half_height = self.display_surface.get_size()[1] // 2
-    
-    def custom_draw(self, player: Player):
+
+        # box camera
+        # camera moves if Player reaches border of screen
+
+        camera_left = CAMERA_BORDERS['left']
+        camera_top = CAMERA_BORDERS['top']
+        camera_width = self.display_surface.get_size()[0] - (camera_left + CAMERA_BORDERS['right'])
+        camera_height = self.display_surface.get_size()[1] - (camera_top + CAMERA_BORDERS['bottom'])
+
+        self.camera_rect = pygame.Rect(camera_left, camera_top, camera_width, camera_height)
+
+    def offset_from_player(self, player: Player):
+        # player offset
         self.offset.x = player.rect.centerx - self.half_width
         self.offset.y = player.rect.centery - self.half_height
+    
+    def offset_from_level(self, player: Player):
 
+        # camera offset
+        if player.rect.left < self.camera_rect.left:
+            self.camera_rect.left = player.rect.left
+        if player.rect.right > self.camera_rect.right:
+            self.camera_rect.right = player.rect.right
+        if player.rect.top < self.camera_rect.top:
+            self.camera_rect.top = player.rect.top
+        if player.rect.bottom > self.camera_rect.bottom:
+            self.camera_rect.bottom = player.rect.bottom
+        self.offset = pygame.math.Vector2(
+                        self.camera_rect.left - CAMERA_BORDERS['left'],
+                        self.camera_rect.top - CAMERA_BORDERS['top'])
+
+    def custom_draw(self, player: Player):
+
+        # self.offset_from_player(player)
+        self.offset_from_level(player)
+        
         for sprite in self.sprites():
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)
