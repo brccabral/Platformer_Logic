@@ -8,3 +8,7 @@ class Tile(pygame.sprite.Sprite):
         self.image = pygame.Surface((TILE_SIZE, TILE_SIZE))
         self.image.fill(TILE_COLOR)
         self.rect = self.image.get_rect(topleft = pos)
+
+if __name__ == '__main__':
+    from main import main
+    main()
