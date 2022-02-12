@@ -1,6 +1,8 @@
-import pygame, sys
+import pygame
+import sys
 from settings import *
 from level import Level
+
 
 def main():
     pygame.init()
@@ -15,7 +17,7 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        
+
         screen.fill(BG_COLOR)
 
         level.run()
@@ -23,6 +25,7 @@ def main():
         # drawing logic
         pygame.display.update()
         clock.tick(60)
+
 
 if __name__ == '__main__':
     main()
