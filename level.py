@@ -1,6 +1,3 @@
-from pydoc import describe
-from re import S
-from tkinter.tix import TixSubWidget
 import pygame
 from settings import *
 from tile import Tile
