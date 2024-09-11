@@ -1,13 +1,13 @@
 import pygame
 import sys
-from settings import *
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, BG_COLOR
 from level import Level
 
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    pygame.display.set_caption('Platformer')
+    pygame.display.set_caption("Platformer")
     clock = pygame.time.Clock()
 
     level = Level()
@@ -27,5 +27,5 @@ def main():
         clock.tick(60)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

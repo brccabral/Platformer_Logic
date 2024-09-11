@@ -1,5 +1,5 @@
 import pygame
-from settings import *
+from settings import LEVEL_MAP, TILE_SIZE, CAMERA_BORDERS
 from tile import Tile
 from player import Player
 
@@ -26,12 +26,14 @@ class Level:
                 x = col_index * TILE_SIZE
                 y = row_index * TILE_SIZE
 
-                if col == 'X':
-                    Tile((x, y), [self.visible_sprites,
-                         self.collision_sprites])
-                if col == 'P':
+                if col == "X":
+                    Tile((x, y), [self.visible_sprites, self.collision_sprites])
+                if col == "P":
                     self.player = Player(
-                        (x, y), [self.visible_sprites, self.active_sprites], self.collision_sprites)
+                        (x, y),
+                        [self.visible_sprites, self.active_sprites],
+                        self.collision_sprites,
+                    )
 
     def run(self):
         self.active_sprites.update()
@@ -54,15 +56,18 @@ class CameraGroup(pygame.sprite.Group):
         # box camera
         # camera moves if Player reaches border of screen
 
-        camera_left = CAMERA_BORDERS['left']
-        camera_top = CAMERA_BORDERS['top']
-        camera_width = self.display_surface.get_size(
-        )[0] - (camera_left + CAMERA_BORDERS['right'])
-        camera_height = self.display_surface.get_size(
-        )[1] - (camera_top + CAMERA_BORDERS['bottom'])
+        camera_left = CAMERA_BORDERS["left"]
+        camera_top = CAMERA_BORDERS["top"]
+        camera_width = self.display_surface.get_size()[0] - (
+            camera_left + CAMERA_BORDERS["right"]
+        )
+        camera_height = self.display_surface.get_size()[1] - (
+            camera_top + CAMERA_BORDERS["bottom"]
+        )
 
         self.camera_rect = pygame.Rect(
-            camera_left, camera_top, camera_width, camera_height)
+            camera_left, camera_top, camera_width, camera_height
+        )
 
     def offset_from_player(self, player: Player):
         # player offset
@@ -81,8 +86,9 @@ class CameraGroup(pygame.sprite.Group):
         if player.rect.bottom > self.camera_rect.bottom:
             self.camera_rect.bottom = player.rect.bottom
         self.offset = pygame.math.Vector2(
-            self.camera_rect.left - CAMERA_BORDERS['left'],
-            self.camera_rect.top - CAMERA_BORDERS['top'])
+            self.camera_rect.left - CAMERA_BORDERS["left"],
+            self.camera_rect.top - CAMERA_BORDERS["top"],
+        )
 
     def custom_draw(self, player: Player):
 
@@ -92,8 +98,3 @@ class CameraGroup(pygame.sprite.Group):
         for sprite in self.sprites():
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)
-
-
-if __name__ == '__main__':
-    from main import main
-    main()
